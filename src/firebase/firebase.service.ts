@@ -27,6 +27,7 @@ export class FirebaseService {
       notification: { title, body },
     };
 
+    console.log(tokens)
     try {
       const response = await this.messaging.sendEachForMulticast(message);
 
