@@ -21,7 +21,7 @@ export class FirebaseService {
     this.messaging = admin.messaging();
   }
 
-  async sendNotificationToMany(token: string, title: string, body: string) {
+  async sendNotification(token: string, title: string, body: string) {
     const message = {
       token,
       notification: { title, body },
@@ -47,6 +47,34 @@ export class FirebaseService {
         success: true,
         messageId
       }
+    } catch (error) {
+      console.error('Lỗi gửi notification:', error);
+      return { success: false, error };
+    }
+  }
+  async sendNotificationToMany(tokens: string[], title: string, body: string) {
+    const message = {
+      tokens,
+      notification: { title, body },
+    };
+
+    try {
+      const response = await this.messaging.sendEachForMulticast(message);
+
+      // Firebase trả về successCount và failureCount
+      // Log token lỗi
+      response.responses.forEach((resp, idx) => {
+        if (!resp.success) {
+          console.warn('Token thất bại:', tokens[idx], resp.error);
+        }
+      });
+
+      return {
+        successCount: response.successCount,
+        failureCount: response.failureCount,
+        responses: response.responses,
+      };
+
     } catch (error) {
       console.error('Lỗi gửi notification:', error);
       return { success: false, error };

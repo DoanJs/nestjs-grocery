@@ -7,8 +7,16 @@ export class FirebaseController {
 
   @Post('send')
   async send(@Body() body: { token: string; title: string; message: string }) {
-    return this.firebaseService.sendNotificationToMany(
+    return this.firebaseService.sendNotification(
       body.token,
+      body.title,
+      body.message,
+    );
+  }
+  @Post('sends')
+  async sends(@Body() body: { tokens: string[]; title: string; message: string }) {
+    return this.firebaseService.sendNotificationToMany(
+      body.tokens,
       body.title,
       body.message,
     );
