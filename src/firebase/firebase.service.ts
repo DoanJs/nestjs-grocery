@@ -28,7 +28,7 @@ export class FirebaseService {
     };
 
     try {
-      const response = await this.messaging.send(message);
+      const messageId = await this.messaging.send(message);
 
       // Firebase trả về successCount và failureCount
       // Log token lỗi
@@ -40,7 +40,7 @@ export class FirebaseService {
 
     return {
       success: true,
-      responses: response,
+      messageId,
     };
     } catch (error) {
       console.error('Lỗi gửi notification:', error);
