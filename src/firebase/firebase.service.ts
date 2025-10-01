@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
-import * as path from 'path';
 
 @Injectable()
 export class FirebaseService {
   private messaging: admin.messaging.Messaging;
 
   constructor() {
-    const serviceAccount = path.resolve(
-      __dirname,
-      '../../firebase-service-account.json',
-    );
+    // const serviceAccount = path.resolve(
+    //   __dirname,
+    //   '../../firebase-service-account.json',
+    // );
+    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT!)
 
     if (!admin.apps.length) {
       admin.initializeApp({
@@ -21,28 +21,32 @@ export class FirebaseService {
     this.messaging = admin.messaging();
   }
 
-  async sendNotificationToMany(tokens: string[], title: string, body: string) {
+  async sendNotificationToMany(token: string, title: string, body: string) {
     const message = {
-      tokens,
+      token,
       notification: { title, body },
     };
 
     try {
-      const response = await this.messaging.sendEachForMulticast(message);
+      const messageId = await this.messaging.send(message);
 
       // Firebase trả về successCount và failureCount
       // Log token lỗi
-      response.responses.forEach((resp, idx) => {
-        if (!resp.success) {
-          console.warn('Token thất bại:', tokens[idx], resp.error);
-        }
-      });
+      // response.responses.forEach((resp, idx) => {
+      //   if (!resp.success) {
+      //     console.warn('Token thất bại:', tokens[idx], resp.error);
+      //   }
+      // });
 
+      // return {
+      //   successCount: response.successCount,
+      //   failureCount: response.failureCount,
+      //   responses: response.responses,
+      // };
       return {
-        successCount: response.successCount,
-        failureCount: response.failureCount,
-        responses: response.responses,
-      };
+        success: true,
+        messageId
+      }
     } catch (error) {
       console.error('Lỗi gửi notification:', error);
       return { success: false, error };
