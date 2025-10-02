@@ -21,10 +21,11 @@ export class FirebaseService {
     this.messaging = admin.messaging();
   }
 
-  async sendNotification(token: string, title: string, body: string) {
+  async sendNotification(token: string, title: string, body: string, id: string, type: string) {
     const message = {
       token,
       notification: { title, body },
+      data: {id, type}
     };
 
     try {
@@ -52,10 +53,11 @@ export class FirebaseService {
       return { success: false, error };
     }
   }
-  async sendNotificationToMany(tokens: string[], title: string, body: string) {
+  async sendNotificationToMany(tokens: string[], title: string, body: string, id: string, type: string) {
     const message = {
       tokens,
       notification: { title, body },
+      data: {id, type}
     };
 
     try {
