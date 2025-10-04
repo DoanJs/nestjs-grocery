@@ -30,7 +30,12 @@ export class FirebaseService {
   ) {
     const message = {
       token,
-      data: { id, type, title, body },
+      data: {
+        id: String(id),
+        type: String(type),
+        title: String(title),
+        body: String(body),
+      },
     };
 
     try {
@@ -67,7 +72,12 @@ export class FirebaseService {
   ) {
     const message = {
       tokens,
-      data: { id, type, title, body },
+      data: {
+        id: String(id),
+        type: String(type),
+        title: String(title),
+        body: String(body),
+      },
     };
 
     try {
