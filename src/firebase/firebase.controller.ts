@@ -9,14 +9,14 @@ export class FirebaseController {
   async send(@Body() body: {
     token: string;
     title: string;
-    message: string;
+    body: string;
     id: string;
     type: string
   }) {
     return this.firebaseService.sendNotification(
       body.token,
       body.title,
-      body.message,
+      body.body,
       body.id,
       body.type
     );
@@ -25,14 +25,14 @@ export class FirebaseController {
   async sends(@Body() body: {
     tokens: string[];
     title: string;
-    message: string;
+    body: string;
     id: string;
     type: string
   }) {
     return this.firebaseService.sendNotificationToMany(
       body.tokens,
       body.title,
-      body.message,
+      body.body,
       body.id,
       body.type
     );
