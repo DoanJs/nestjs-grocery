@@ -10,7 +10,7 @@ export class FirebaseService {
     //   __dirname,
     //   '../../firebase-service-account.json',
     // );
-    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT!)
+    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT!);
 
     if (!admin.apps.length) {
       admin.initializeApp({
@@ -21,11 +21,16 @@ export class FirebaseService {
     this.messaging = admin.messaging();
   }
 
-  async sendNotification(token: string, title: string, body: string, id: string, type: string) {
+  async sendNotification(
+    token: string,
+    title: string,
+    body: string,
+    id: string,
+    type: string,
+  ) {
     const message = {
       token,
-      notification: { title, body },
-      data: {id, type}
+      data: { id, type, title, body },
     };
 
     try {
@@ -46,18 +51,23 @@ export class FirebaseService {
       // };
       return {
         success: true,
-        messageId
-      }
+        messageId,
+      };
     } catch (error) {
       console.error('Lỗi gửi notification:', error);
       return { success: false, error };
     }
   }
-  async sendNotificationToMany(tokens: string[], title: string, body: string, id: string, type: string) {
+  async sendNotificationToMany(
+    tokens: string[],
+    title: string,
+    body: string,
+    id: string,
+    type: string,
+  ) {
     const message = {
       tokens,
-      notification: { title, body },
-      data: {id, type}
+      data: { id, type, title, body },
     };
 
     try {
@@ -76,7 +86,6 @@ export class FirebaseService {
         failureCount: response.failureCount,
         responses: response.responses,
       };
-
     } catch (error) {
       console.error('Lỗi gửi notification:', error);
       return { success: false, error };
